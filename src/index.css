@@ -1,0 +1,195 @@
+@import "tailwindcss";
+
+/* Height-based variants so the whole table fits on short laptop screens. */
+@custom-variant short (@media (max-height: 820px));
+@custom-variant shorter (@media (max-height: 720px));
+
+@theme {
+  /* Palette: charcoal, deep green, off-white, muted grey. Red is reserved for hearts & diamonds. */
+  --color-ink: #111111;
+  --color-ink-2: #171717;
+  --color-felt: #112219;
+  --color-felt-deep: #0b1811;
+  --color-felt-light: #173126;
+  --color-paper: #f2efe6;
+  --color-paper-dim: #cfccc3;
+  --color-mute: #8d918c;
+  --color-mute-2: #5c605c;
+  --color-card: #fcfbf7;
+  --color-suit-red: #c4322b;
+  --color-suit-black: #1b1b1b;
+  --color-back: #163429;
+
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+    sans-serif;
+
+  --ease-out-soft: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  --animate-deal: deal-in 480ms var(--ease-out-soft) both;
+  --animate-rise: rise 420ms var(--ease-out-soft) both;
+  --animate-fade: fade 320ms ease-out both;
+  --animate-pulse-soft: pulse-soft 2.4s ease-in-out infinite;
+
+  @keyframes deal-in {
+    from {
+      opacity: 0;
+      transform: translate(48px, -72px) rotate(5deg) scale(0.94);
+    }
+    to {
+      opacity: 1;
+      transform: translate(0, 0) rotate(0deg) scale(1);
+    }
+  }
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes pulse-soft {
+    0%,
+    100% {
+      opacity: 0.55;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+}
+
+:root {
+  /* Cards keep real 2.5 × 3.5 proportions and scale with the viewport. */
+  --card-w: 96px;
+  --card-h: calc(var(--card-w) * 1.4);
+  --card-radius: calc(var(--card-w) * 0.064);
+  --card-overlap: calc(var(--card-w) * -0.6);
+  color-scheme: dark;
+}
+
+/* Short desktop viewports (laptops) get slightly smaller cards so the whole table fits. */
+@media (min-width: 901px) and (max-height: 860px) {
+  :root {
+    --card-w: 84px;
+  }
+}
+
+@media (min-width: 901px) and (max-height: 760px) {
+  :root {
+    --card-w: 74px;
+  }
+}
+
+@media (min-width: 901px) and (max-height: 680px) {
+  :root {
+    --card-w: 66px;
+  }
+}
+
+@media (max-width: 900px) {
+  :root {
+    --card-w: 80px;
+  }
+}
+
+@media (max-width: 520px) {
+  :root {
+    --card-w: 62px;
+  }
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-ink);
+  color: var(--color-paper);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "tnum", "ss01", "cv11";
+  overflow-x: hidden;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 2px solid rgba(242, 239, 230, 0.6);
+  outline-offset: 3px;
+}
+
+/* ---------- card flip ---------- */
+
+.flip {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 620ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.flip.is-down {
+  transform: rotateY(180deg);
+}
+
+.flip > .flip-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: var(--card-radius);
+  overflow: hidden;
+}
+
+.flip > .flip-back {
+  transform: rotateY(180deg);
+}
+
+/* ---------- felt ---------- */
+
+.felt {
+  background:
+    radial-gradient(120% 90% at 50% 30%, var(--color-felt-light) 0%, var(--color-felt) 48%, var(--color-felt-deep) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+    0 40px 90px -50px rgba(0, 0, 0, 0.9);
+}
+
+.card-shadow {
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.35),
+    0 10px 24px -10px rgba(0, 0, 0, 0.7);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
